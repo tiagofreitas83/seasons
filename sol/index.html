@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seasons &mdash; Proje&ccedil;&atilde;o Solar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; background: #1a1a1a; font-family: 'Inter', sans-serif; }
+        #scene3d { height: 100vh !important; height: 100dvh !important; min-height: 0 !important; }
+        @media (max-width: 520px) {
+            #info { font-size: 11px !important; padding: 10px 12px !important; max-width: 220px !important; }
+            #solar-panel { min-width: 0 !important; width: calc(100% - 32px); }
+        }
+    </style>
+</head>
+<body>
+            <div id="scene3d" style="position: relative; width: 100%; height: 80vh; min-height: 600px; overflow: hidden; background: #87CEEB;">
+                <div id="info" style="position:absolute;top:16px;left:16px;z-index:10;background:rgba(26,24,20,0.85);color:#fff;padding:14px 18px;border-radius:8px;font-size:13px;line-height:1.6;pointer-events:none;max-width:280px;">
+                    <h2 style="font-size:15px;margin-bottom:6px;color:#d4c4a8;font-family:'Inter',sans-serif;">Resid&ecirc;ncia Seasons</h2>
+                    <span style="color:#aaa;">Dois lotes unificados</span><br>
+                    <span style="color:#aaa;">Edifica&ccedil;&atilde;o: 25&times;14m &middot; 2 pisos &middot; 700m&sup2;</span><br>
+                    <span style="color:#aaa;">Duplo beiral (teto + laje 2&ordm; piso)</span><br>
+                    <span style="color:#aaa;">Fundos: 75m&sup2; coberto + 100m&sup2; travertino</span><br>
+                    <span style="color:#aaa;">Piscina 9&times;3m + Jacuzi 3&times;3m</span><br>
+                    <span style="color:#aaa;">Casa olha p/ lago: 216&deg; SW</span>
+                </div>
+                <div id="solar-panel" style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(26,24,20,0.85);color:#e8ddd0;padding:12px 18px;border-radius:12px;font-size:12px;backdrop-filter:blur(8px);min-width:460px;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <label style="color:#999;font-size:11px;min-width:40px;">Hora</label>
+                        <input type="range" id="timeSlider" min="5" max="20" step="0.1" value="10" style="flex:1;height:5px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.15);border-radius:3px;outline:none;">
+                        <div id="timeDisplay" style="font-size:20px;font-weight:700;color:#d4a054;min-width:55px;text-align:center;">10:00</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <label style="color:#999;font-size:11px;min-width:40px;">Data</label>
+                        <div class="solar-dates" style="display:flex;gap:5px;flex-wrap:wrap;">
+                            <button data-day="172" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">21 Jun &middot; Inverno</button>
+                            <button data-day="265" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">22 Set &middot; Equin&oacute;cio</button>
+                            <button data-day="355" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">21 Dez &middot; Ver&atilde;o</button>
+                            <button data-day="80" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">21 Mar &middot; Equin&oacute;cio</button>
+                            <button data-day="96" class="active" style="padding:2px 7px;border:1px solid #d4a054;background:rgba(212,160,84,0.3);color:#d4a054;border-radius:4px;font-size:10px;cursor:pointer;">5 Abr &middot; Hoje</button>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <div style="font-size:11px;color:#887766;display:flex;gap:14px;flex-wrap:wrap;">
+                            <span>Azimute: <strong id="azVal">&mdash;</strong></span>
+                            <span>Altitude: <strong id="altVal">&mdash;</strong></span>
+                            <span>Nascer: <strong id="sunRise">&mdash;</strong></span>
+                            <span>P&ocirc;r: <strong id="sunSet">&mdash;</strong></span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="font-size:10px;color:#665;">Xangri-l&aacute;/RS &middot; Elev. 10m &middot; Arrastar p/ girar &middot; Scroll p/ zoom</div>
+                    </div>
+                </div>
+            </div>
+    <script>
+    (function () {
+      var now = new Date();
+      var day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+      var meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+      var btn = document.querySelector('#solar-panel .solar-dates button.active');
+      btn.dataset.day = day;
+      btn.innerHTML = now.getDate() + ' ' + meses[now.getMonth()] + ' &middot; Hoje';
+    })();
+    </script>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+    </script>
+
+    <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const container = document.getElementById('scene3d');
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87CEEB);
+    scene.fog = new THREE.Fog(0x87CEEB, 120, 280);
+
+    const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 500);
+    camera.position.set(-35, 25, 35);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.3;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 3, -2);
+
+    const ambientLight = new THREE.AmbientLight(0x8FAFC5, 0.5);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xFFF5E0, 1.5);
+    dirLight.position.set(30, 40, 20);
+    dirLight.castShadow = true;
+    dirLight.shadow.camera.left = -45;
+    dirLight.shadow.camera.right = 45;
+    dirLight.shadow.camera.top = 45;
+    dirLight.shadow.camera.bottom = -45;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    scene.add(dirLight);
+
+    const hemiLight = new THREE.HemisphereLight(0xC5D8E8, 0x5A7A4A, 0.5);
+    scene.add(hemiLight);
+
+    const lotW = 30, lotD = 30, halfW = lotW / 2, halfD = lotD / 2;
+
+    const terrainSize = 100, segments = 80;
+    const terrainGeo = new THREE.PlaneGeometry(terrainSize, terrainSize, segments, segments);
+    terrainGeo.rotateX(-Math.PI / 2);
+
+    const positions = terrainGeo.attributes.position;
+    const colors = new Float32Array(positions.count * 3);
+
+    for (let i = 0; i < positions.count; i++) {
+      const x = positions.getX(i), z = positions.getZ(i);
+      const insideLot = x >= -halfW && x <= halfW && z >= -halfD && z <= halfD;
+      const insideAPP = x < -halfW && x >= -halfW - 37 && z >= -halfD && z <= halfD;
+      if (insideLot) { colors[i*3] = 0.40; colors[i*3+1] = 0.52; colors[i*3+2] = 0.32; }
+      else if (insideAPP) { colors[i*3] = 0.15; colors[i*3+1] = 0.40; colors[i*3+2] = 0.12; }
+      else { colors[i*3] = 0.28; colors[i*3+1] = 0.40; colors[i*3+2] = 0.22; }
+      if (z < -halfD - 1) { positions.setY(i, -0.4); colors[i*3] = 0.30; colors[i*3+1] = 0.52; colors[i*3+2] = 0.62; }
+    }
+    terrainGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    terrainGeo.computeVertexNormals();
+
+    const terrain = new THREE.Mesh(terrainGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0.0 }));
+    terrain.receiveShadow = true;
+    scene.add(terrain);
+
+    const lakeGeo = new THREE.PlaneGeometry(terrainSize, 18);
+    lakeGeo.rotateX(-Math.PI / 2);
+    const lake = new THREE.Mesh(lakeGeo, new THREE.MeshStandardMaterial({ color: 0x4A8AB0, roughness: 0.1, metalness: 0.3, transparent: true, opacity: 0.65 }));
+    lake.position.set(0, -0.25, -halfD - 10);
+    lake.receiveShadow = true;
+    scene.add(lake);
+
+    const treeTrunkMat = new THREE.MeshStandardMaterial({ color: 0x5a4030, roughness: 0.95 });
+    const treeLeafMat = new THREE.MeshStandardMaterial({ color: 0x2a6a1a, roughness: 0.85 });
+    const treeLeafMat2 = new THREE.MeshStandardMaterial({ color: 0x1a5a10, roughness: 0.85 });
+
+    function addTree(x, z, h, r) {
+      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, h * 0.5, 6), treeTrunkMat);
+      trunk.position.set(x, h * 0.25, z); trunk.castShadow = true; scene.add(trunk);
+      const leafMat = Math.random() > 0.5 ? treeLeafMat : treeLeafMat2;
+      const crown = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), leafMat);
+      crown.position.set(x, h * 0.6 + r * 0.3, z); crown.castShadow = true; scene.add(crown);
+    }
+
+    for (let i = 0; i < 40; i++) {
+      const x = -halfW - 2 - Math.random() * 33;
+      const z = -halfD + Math.random() * lotD;
+      addTree(x, z, 3 + Math.random() * 5, 1.5 + Math.random() * 2);
+    }
+
+    const appCanvas = document.createElement('canvas');
+    appCanvas.width = 256; appCanvas.height = 64;
+    const appCtx = appCanvas.getContext('2d');
+    appCtx.fillStyle = '#1a5a10';
+    appCtx.font = 'bold 24px Arial';
+    appCtx.textAlign = 'center';
+    appCtx.fillText('APP ~1.100m\u00B2', 128, 40);
+    const appSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(appCanvas), transparent: true, opacity: 0.7 }));
+    appSprite.position.set(-halfW - 18, 6, 0);
+    appSprite.scale.set(14, 3.5, 1);
+    scene.add(appSprite);
+
+    const lotBnd = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-halfW, 0.1, halfD), new THREE.Vector3(halfW, 0.1, halfD),
+      new THREE.Vector3(halfW, 0.1, -halfD), new THREE.Vector3(-halfW, 0.1, -halfD),
+      new THREE.Vector3(-halfW, 0.1, halfD),
+    ]);
+    scene.add(new THREE.Line(lotBnd, new THREE.LineBasicMaterial({ color: 0x8c7b6b })));
+
+    const divGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0.12, halfD), new THREE.Vector3(0, 0.12, -halfD),
+    ]);
+    const divLine = new THREE.Line(divGeo, new THREE.LineDashedMaterial({ color: 0xcc4444, dashSize: 1, gapSize: 0.5 }));
+    divLine.computeLineDistances();
+    scene.add(divLine);
+
+    const roadGeo = new THREE.PlaneGeometry(lotW + 30, 6);
+    roadGeo.rotateX(-Math.PI / 2);
+    const road = new THREE.Mesh(roadGeo, new THREE.MeshStandardMaterial({ color: 0x555555, roughness: 0.9 }));
+    road.position.set(0, 0.02, halfD + 6); road.receiveShadow = true; scene.add(road);
+
+    const passeioGeo = new THREE.PlaneGeometry(lotW, 3);
+    passeioGeo.rotateX(-Math.PI / 2);
+    const passeio = new THREE.Mesh(passeioGeo, new THREE.MeshStandardMaterial({ color: 0x5a8a4a, roughness: 0.95 }));
+    passeio.position.set(0, 0.03, halfD + 1.5); scene.add(passeio);
+
+    const concreteMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.6, metalness: 0.1 });
+    const stoneMat = new THREE.MeshStandardMaterial({ color: 0x9a8a7a, roughness: 0.92, metalness: 0.0 });
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x8B7355, roughness: 0.75, metalness: 0.0 });
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x88B8D0, roughness: 0.05, metalness: 0.7, transparent: true, opacity: 0.3 });
+    const darkMat = new THREE.MeshStandardMaterial({ color: 0x6e6e6a, roughness: 0.85, metalness: 0.03 });
+    const travertinoMat = new THREE.MeshStandardMaterial({ color: 0xd8c8a8, roughness: 0.45, metalness: 0.05 });
+
+    const bldgW = 25, bldgD = 14, floorH = 3.0, slabH = 0.25, CR = 0.5;
+    const recuoFront = 4, recuoBack = 6, recuoLat = 2.5;
+    const bldgFrontZ = halfD - recuoFront;
+    const bldgBackZ = bldgFrontZ - bldgD;
+    const bldgCenterZ = (bldgFrontZ + bldgBackZ) / 2;
+    const bldgCenterX = 0;
+
+    const terreoGeo = new THREE.BoxGeometry(bldgW, floorH, bldgD);
+    const terreo2 = new THREE.Mesh(terreoGeo, stoneMat);
+    terreo2.position.set(bldgCenterX, CR + floorH / 2, bldgCenterZ);
+    terreo2.castShadow = true; terreo2.receiveShadow = true; scene.add(terreo2);
+
+    const lajeOverhangFront = 1.5, lajeOverhangBack = 3.0, lajeOverhangLat = 1.5;
+    const laje1W = bldgW + lajeOverhangLat * 2;
+    const laje1D = bldgD + lajeOverhangFront + lajeOverhangBack;
+    const laje1Geo = new THREE.BoxGeometry(laje1W, slabH, laje1D);
+    const laje1 = new THREE.Mesh(laje1Geo, concreteMat);
+    const laje1Y = CR + floorH + slabH / 2;
+    const laje1CenterZ = bldgCenterZ + (lajeOverhangFront - lajeOverhangBack) / 2;
+    laje1.position.set(bldgCenterX, laje1Y, laje1CenterZ);
+    laje1.castShadow = true; laje1.receiveShadow = true; scene.add(laje1);
+
+    const supGeo = new THREE.BoxGeometry(bldgW, floorH, bldgD);
+    const superior = new THREE.Mesh(supGeo, darkMat);
+    superior.position.set(bldgCenterX, CR + floorH + slabH + floorH / 2, bldgCenterZ);
+    superior.castShadow = true; superior.receiveShadow = true; scene.add(superior);
+
+    const roofOverhangFront = 1.5, roofOverhangBack = 3.0, roofOverhangLat = 1.5;
+    const roofW = bldgW + roofOverhangLat * 2;
+    const roofD = bldgD + roofOverhangFront + roofOverhangBack;
+    const roofGeo = new THREE.BoxGeometry(roofW, slabH, roofD);
+    const roofY = CR + floorH * 2 + slabH * 2 - slabH / 2;
+    const roofCenterZ = bldgCenterZ + (roofOverhangFront - roofOverhangBack) / 2;
+    const roof = new THREE.Mesh(roofGeo, concreteMat);
+    roof.position.set(bldgCenterX, roofY, roofCenterZ);
+    roof.castShadow = true; roof.receiveShadow = true; scene.add(roof);
+
+    const roofUnderGeo = new THREE.PlaneGeometry(roofW, roofD);
+    roofUnderGeo.rotateX(Math.PI / 2);
+    const roofUnder = new THREE.Mesh(roofUnderGeo, woodMat);
+    roofUnder.position.set(bldgCenterX, roofY - slabH / 2 - 0.01, roofCenterZ);
+    scene.add(roofUnder);
+
+    const laje1UnderGeo = new THREE.PlaneGeometry(laje1W, laje1D);
+    laje1UnderGeo.rotateX(Math.PI / 2);
+    const laje1Under = new THREE.Mesh(laje1UnderGeo, woodMat);
+    laje1Under.position.set(bldgCenterX, laje1Y - slabH / 2 - 0.01, laje1CenterZ);
+    scene.add(laje1Under);
+
+    const winBackGeo1 = new THREE.PlaneGeometry(bldgW - 2, floorH * 0.85);
+    const winBack1 = new THREE.Mesh(winBackGeo1, glassMat);
+    winBack1.position.set(bldgCenterX, CR + floorH * 0.45, bldgBackZ - 0.01);
+    winBack1.rotation.y = Math.PI; scene.add(winBack1);
+
+    const winBackGeo2 = new THREE.PlaneGeometry(bldgW - 3, floorH * 0.75);
+    const winBack2 = new THREE.Mesh(winBackGeo2, glassMat);
+    winBack2.position.set(bldgCenterX, CR + floorH + slabH + floorH * 0.42, bldgBackZ - 0.01);
+    winBack2.rotation.y = Math.PI; scene.add(winBack2);
+
+    const winFrontGeo = new THREE.PlaneGeometry(10, floorH * 0.65);
+    const winFront1 = new THREE.Mesh(winFrontGeo, glassMat);
+    winFront1.position.set(3, CR + floorH * 0.38, bldgFrontZ + 0.01); scene.add(winFront1);
+
+    const winSideGeo = new THREE.PlaneGeometry(6, floorH * 0.5);
+    const winLeft = new THREE.Mesh(winSideGeo, glassMat);
+    winLeft.position.set(-bldgW / 2 - 0.01, CR + floorH * 0.35, bldgCenterZ - 2);
+    winLeft.rotation.y = -Math.PI / 2; scene.add(winLeft);
+
+    const winRight = new THREE.Mesh(winSideGeo.clone(), glassMat);
+    winRight.position.set(bldgW / 2 + 0.01, CR + floorH * 0.35, bldgCenterZ - 2);
+    winRight.rotation.y = Math.PI / 2; scene.add(winRight);
+
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.3, metalness: 0.5 });
+    for (let fx = -bldgW / 2 + 3; fx <= bldgW / 2 - 3; fx += 3) {
+      const frame1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, floorH * 0.85, 0.06), frameMat);
+      frame1.position.set(fx, CR + floorH * 0.45, bldgBackZ - 0.05); scene.add(frame1);
+      const frame2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, floorH * 0.75, 0.06), frameMat);
+      frame2.position.set(fx, CR + floorH + slabH + floorH * 0.42, bldgBackZ - 0.05); scene.add(frame2);
+    }
+
+    const travertinoDist = Math.abs(bldgBackZ - (-halfD));
+    const travertinoW = lotW - recuoLat * 2 + 2;
+    const travertinoGeo2 = new THREE.PlaneGeometry(travertinoW, travertinoDist);
+    travertinoGeo2.rotateX(-Math.PI / 2);
+    const travertino = new THREE.Mesh(travertinoGeo2, travertinoMat);
+    travertino.position.set(bldgCenterX, CR + 0.02, bldgBackZ - travertinoDist / 2);
+    travertino.receiveShadow = true; scene.add(travertino);
+
+    const poolW = 9, poolD = 3;
+    const poolCenterX = -1.5;
+    const poolCenterZ = -halfD + poolD / 2 + 0.3;
+
+    const poolGeo = new THREE.BoxGeometry(poolW, 1.3, poolD);
+    const pool = new THREE.Mesh(poolGeo, new THREE.MeshStandardMaterial({ color: 0x1a5a7a, roughness: 0.2, metalness: 0.1 }));
+    pool.position.set(poolCenterX, CR - 0.65, poolCenterZ); scene.add(pool);
+
+    const waterGeo = new THREE.PlaneGeometry(poolW - 0.15, poolD - 0.15);
+    waterGeo.rotateX(-Math.PI / 2);
+    const water = new THREE.Mesh(waterGeo, new THREE.MeshStandardMaterial({ color: 0x3a9ac0, roughness: 0.02, metalness: 0.35, transparent: true, opacity: 0.55 }));
+    water.position.set(poolCenterX, CR + 0.03, poolCenterZ); scene.add(water);
+
+    const edgeMat = new THREE.MeshStandardMaterial({ color: 0xd8c8a8, roughness: 0.35, metalness: 0.1 });
+    function mkEdge(w, h, d, x, y, z) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), edgeMat);
+      m.position.set(x, y, z); m.castShadow = true; return m;
+    }
+    scene.add(mkEdge(poolW + 0.5, 0.12, 0.25, poolCenterX, CR + 0.1, poolCenterZ + poolD / 2 + 0.12));
+    scene.add(mkEdge(poolW + 0.5, 0.12, 0.25, poolCenterX, CR + 0.1, poolCenterZ - poolD / 2 - 0.12));
+    scene.add(mkEdge(0.25, 0.12, poolD + 0.5, poolCenterX - poolW / 2 - 0.12, CR + 0.1, poolCenterZ));
+
+    const jacW = 3, jacD = 3;
+    const jacCenterX = poolCenterX + poolW / 2 + jacW / 2;
+    const jacCenterZ = poolCenterZ;
+
+    const jacGeo = new THREE.BoxGeometry(jacW, 1.1, jacD);
+    const jac = new THREE.Mesh(jacGeo, new THREE.MeshStandardMaterial({ color: 0x1a5a7a, roughness: 0.2 }));
+    jac.position.set(jacCenterX, CR - 0.55, jacCenterZ); scene.add(jac);
+
+    const jacWaterGeo = new THREE.PlaneGeometry(jacW - 0.2, jacD - 0.2);
+    jacWaterGeo.rotateX(-Math.PI / 2);
+    const jacWater = new THREE.Mesh(jacWaterGeo, new THREE.MeshStandardMaterial({ color: 0x40b8d8, roughness: 0.02, metalness: 0.35, transparent: true, opacity: 0.6 }));
+    jacWater.position.set(jacCenterX, CR + 0.06, jacCenterZ); scene.add(jacWater);
+
+    scene.add(mkEdge(jacW + 0.5, 0.14, 0.25, jacCenterX, CR + 0.12, jacCenterZ + jacD / 2 + 0.12));
+    scene.add(mkEdge(jacW + 0.5, 0.14, 0.25, jacCenterX, CR + 0.12, jacCenterZ - jacD / 2 - 0.12));
+    scene.add(mkEdge(0.25, 0.14, jacD + 0.5, jacCenterX + jacW / 2 + 0.12, CR + 0.12, jacCenterZ));
+
+    const garW = 8.5, garD = 7.5, garH = 3.0;
+    const garCenterX = -bldgW / 2 + garW / 2;
+    const garFrontZ = bldgFrontZ;
+
+    const garGeo = new THREE.BoxGeometry(garW, garH, garD);
+    const garMesh = new THREE.Mesh(garGeo, new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.8 }));
+    garMesh.position.set(garCenterX, CR + garH / 2, garFrontZ - garD / 2);
+    garMesh.castShadow = true; scene.add(garMesh);
+
+    const garOpenGeo = new THREE.PlaneGeometry(garW - 0.8, garH - 0.4);
+    const garOpen = new THREE.Mesh(garOpenGeo, new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.95 }));
+    garOpen.position.set(garCenterX, CR + garH / 2 - 0.15, garFrontZ + 0.01); scene.add(garOpen);
+
+    function addSUV(cx, cz, color) {
+      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.25, metalness: 0.5 });
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.95, 4.5), mat);
+      body.position.set(cx, CR + 0.55, cz); body.castShadow = true; scene.add(body);
+      const cab = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.68, 2.7), mat);
+      cab.position.set(cx, CR + 1.28, cz + 0.15); cab.castShadow = true; scene.add(cab);
+      const wMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+      const wGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.2, 10);
+      wGeo.rotateZ(Math.PI / 2);
+      [[-0.88, cz - 1.4], [0.88, cz - 1.4], [-0.88, cz + 1.4], [0.88, cz + 1.4]].forEach(([dx, dz]) => {
+        const w = new THREE.Mesh(wGeo, wMat); w.position.set(cx + dx, CR + 0.34, dz); scene.add(w);
+      });
+    }
+
+    const suvZ = garFrontZ - garD / 2 + 1;
+    addSUV(garCenterX - 2.8, suvZ, 0xf0f0f0);
+    addSUV(garCenterX, suvZ, 0x777777);
+    addSUV(garCenterX + 2.8, suvZ, 0x1a1a1a);
+
+    const setbackMat = new THREE.LineDashedMaterial({ color: 0xa67c52, dashSize: 0.5, gapSize: 0.3, transparent: true, opacity: 0.35 });
+    function addSetbackLine(pts) {
+      const g = new THREE.BufferGeometry().setFromPoints(pts);
+      const l = new THREE.Line(g, setbackMat);
+      l.computeLineDistances(); scene.add(l);
+    }
+    addSetbackLine([new THREE.Vector3(-halfW, 0.1, halfD - recuoFront), new THREE.Vector3(halfW, 0.1, halfD - recuoFront)]);
+    addSetbackLine([new THREE.Vector3(-halfW, 0.1, -halfD + recuoBack), new THREE.Vector3(halfW, 0.1, -halfD + recuoBack)]);
+    addSetbackLine([new THREE.Vector3(-halfW + recuoLat, 0.1, halfD), new THREE.Vector3(-halfW + recuoLat, 0.1, -halfD)]);
+    addSetbackLine([new THREE.Vector3(halfW - recuoLat, 0.1, halfD), new THREE.Vector3(halfW - recuoLat, 0.1, -halfD)]);
+
+    const LAT_DEG = -29.80, LON_DEG = -50.06;
+    const LAT_RAD = LAT_DEG * Math.PI / 180;
+    const LOT_BEARING = 36;
+
+    function getSunPosition(dayOfYear, solarHour) {
+      const declRad = 23.45 * Math.sin((360 / 365 * (284 + dayOfYear)) * Math.PI / 180) * Math.PI / 180;
+      const H = (solarHour - 12) * 15 * Math.PI / 180;
+      const sinAlt = Math.sin(LAT_RAD) * Math.sin(declRad) + Math.cos(LAT_RAD) * Math.cos(declRad) * Math.cos(H);
+      const altitude = Math.asin(Math.max(-1, Math.min(1, sinAlt)));
+      const cosAz = (Math.sin(declRad) - Math.sin(LAT_RAD) * sinAlt) / (Math.cos(LAT_RAD) * Math.cos(altitude) + 0.0001);
+      let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAz)));
+      if (H > 0) azimuth = 2 * Math.PI - azimuth;
+      return { altitude, azimuth, altDeg: altitude * 180 / Math.PI, azDeg: azimuth * 180 / Math.PI };
+    }
+
+    function sunTo3D(azimuth, altitude, dist) {
+      const frontBearing = LOT_BEARING * Math.PI / 180;
+      const relAngle = azimuth - frontBearing;
+      const ca = Math.cos(altitude);
+      return new THREE.Vector3(-dist * ca * Math.sin(relAngle), dist * Math.sin(altitude), dist * ca * Math.cos(relAngle));
+    }
+
+    function getSunriseSunset(day) {
+      const d = 23.45 * Math.sin((360 / 365 * (284 + day)) * Math.PI / 180) * Math.PI / 180;
+      const c = -Math.tan(LAT_RAD) * Math.tan(d);
+      if (c < -1) return { rise: 0, set: 24 };
+      if (c > 1) return { rise: 12, set: 12 };
+      const H0 = Math.acos(c) * 180 / Math.PI / 15;
+      return { rise: 12 - H0, set: 12 + H0 };
+    }
+
+    const sunSphere = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({ color: 0xffdd88 }));
+    scene.add(sunSphere);
+
+    let sunPathLine = null;
+    let currentDay = parseInt(document.querySelector("#solar-panel .solar-dates button.active").dataset.day);
+
+    function drawSunPath(day) {
+      if (sunPathLine) scene.remove(sunPathLine);
+      const pts = [], ss = getSunriseSunset(day);
+      for (let h = ss.rise; h <= ss.set; h += 0.15) {
+        const sp = getSunPosition(day, h);
+        if (sp.altDeg < 0) continue;
+        pts.push(sunTo3D(sp.azimuth, sp.altitude, 55));
+      }
+      if (pts.length > 2) {
+        sunPathLine = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(pts),
+          new THREE.LineBasicMaterial({ color: 0xffaa44, transparent: true, opacity: 0.4 })
+        );
+        scene.add(sunPathLine);
+      }
+    }
+
+    function updateSun(hour, day) {
+      const sp = getSunPosition(day, hour);
+      const ss = getSunriseSunset(day);
+      const hh = Math.floor(hour), mm = Math.floor((hour - hh) * 60);
+      document.getElementById('timeDisplay').textContent = `${hh}:${mm.toString().padStart(2, '0')}`;
+      document.getElementById('azVal').textContent = `${sp.azDeg.toFixed(1)}\u00B0`;
+      document.getElementById('altVal').textContent = `${sp.altDeg.toFixed(1)}\u00B0`;
+      const rh = Math.floor(ss.rise), rm = Math.floor((ss.rise - rh) * 60);
+      const sh = Math.floor(ss.set), sm = Math.floor((ss.set - sh) * 60);
+      document.getElementById('sunRise').textContent = `${rh}:${rm.toString().padStart(2, '0')}`;
+      document.getElementById('sunSet').textContent = `${sh}:${sm.toString().padStart(2, '0')}`;
+
+      if (sp.altDeg > -2) {
+        const sunPos = sunTo3D(sp.azimuth, Math.max(sp.altitude, 0.02), 55);
+        sunSphere.position.copy(sunPos);
+        sunSphere.visible = sp.altDeg > 0;
+        dirLight.position.copy(sunTo3D(sp.azimuth, Math.max(sp.altitude, 0.05), 50));
+        const altF = Math.max(0, Math.sin(sp.altitude));
+        dirLight.intensity = altF * 1.5 * (sp.altDeg < 15 ? 1.5 : 1.0);
+        if (sp.altDeg < 10) { dirLight.color.setHex(0xff8030); sunSphere.material.color.setHex(0xff9940); }
+        else if (sp.altDeg < 25) { dirLight.color.setHex(0xffb060); sunSphere.material.color.setHex(0xffcc66); }
+        else { dirLight.color.setHex(0xffeedd); sunSphere.material.color.setHex(0xffeeaa); }
+        if (sp.altDeg < 0) { scene.background.setHex(0x0a0a1a); scene.fog.color.setHex(0x0a0a1a); }
+        else if (sp.altDeg < 8) { scene.background.setHex(0x2a2040); scene.fog.color.setHex(0x2a2040); renderer.toneMappingExposure = 0.8 + altF * 0.5; }
+        else if (sp.altDeg < 20) { scene.background.setHex(0x3a4a6a); scene.fog.color.setHex(0x3a4a6a); renderer.toneMappingExposure = 1.0; }
+        else { scene.background.setHex(0x87CEEB); scene.fog.color.setHex(0x87CEEB); renderer.toneMappingExposure = 1.3; }
+        ambientLight.intensity = 0.2 + altF * 0.5;
+        hemiLight.intensity = 0.15 + altF * 0.35;
+      } else {
+        sunSphere.visible = false; dirLight.intensity = 0;
+        scene.background.setHex(0x0a0a1a); scene.fog.color.setHex(0x0a0a1a);
+        renderer.toneMappingExposure = 0.6;
+        ambientLight.intensity = 0.15; hemiLight.intensity = 0.08;
+      }
+    }
+
+    function addCompassLabel(dir, azDeg) {
+      const pos = sunTo3D(azDeg * Math.PI / 180, 0, 42);
+      pos.y = 2;
+      const cv = document.createElement('canvas'); cv.width = 64; cv.height = 32;
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = dir === 'N' ? '#e74c3c' : '#bbb';
+      ctx.font = `bold ${dir === 'N' ? 26 : 22}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.fillText(dir, 32, 26);
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, opacity: 0.7 }));
+      sp.position.copy(pos); sp.scale.set(4, 2, 1); scene.add(sp);
+    }
+    addCompassLabel('N', 0);
+    addCompassLabel('S', 180);
+    addCompassLabel('L', 90);
+    addCompassLabel('O', 270);
+
+    const lakeLabel = document.createElement('canvas');
+    lakeLabel.width = 256; lakeLabel.height = 48;
+    const llCtx = lakeLabel.getContext('2d');
+    llCtx.fillStyle = '#5a9ac0';
+    llCtx.font = 'bold 20px Arial';
+    llCtx.textAlign = 'center';
+    llCtx.fillText('\u2190 LAGO (216\u00B0 SW)', 128, 32);
+    const llSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(lakeLabel), transparent: true, opacity: 0.6 }));
+    llSprite.position.set(0, 4, -halfD - 3);
+    llSprite.scale.set(16, 3, 1); scene.add(llSprite);
+
+    const roadLabel = document.createElement('canvas');
+    roadLabel.width = 256; roadLabel.height = 48;
+    const rlCtx = roadLabel.getContext('2d');
+    rlCtx.fillStyle = '#999';
+    rlCtx.font = 'bold 18px Arial';
+    rlCtx.textAlign = 'center';
+    rlCtx.fillText('VIA INTERNA (36\u00B0 NE)', 128, 32);
+    const rlSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(roadLabel), transparent: true, opacity: 0.5 }));
+    rlSprite.position.set(0, 4, halfD + 6);
+    rlSprite.scale.set(14, 2.5, 1); scene.add(rlSprite);
+
+    document.getElementById('timeSlider').addEventListener('input', (e) => {
+      updateSun(parseFloat(e.target.value), currentDay);
+    });
+
+    document.querySelectorAll('#solar-panel .solar-dates button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#solar-panel .solar-dates button').forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'rgba(255,255,255,0.05)';
+          b.style.borderColor = 'rgba(255,255,255,0.2)';
+          b.style.color = '#b0a090';
+        });
+        btn.classList.add('active');
+        btn.style.background = 'rgba(212,160,84,0.3)';
+        btn.style.borderColor = '#d4a054';
+        btn.style.color = '#d4a054';
+        currentDay = parseInt(btn.dataset.day);
+        drawSunPath(currentDay);
+        updateSun(parseFloat(document.getElementById('timeSlider').value), currentDay);
+      });
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    drawSunPath(currentDay);
+    updateSun(10, currentDay);
+    animate();
+    </script>
+</body>
+</html>

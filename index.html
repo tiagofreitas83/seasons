@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seasons &mdash; Resid&ecirc;ncia Seasons</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        :root {
+            --concreto: #3a3a3a;
+            --concreto-claro: #5a5a5a;
+            --pedra: #8c7b6b;
+            --pedra-clara: #a89888;
+            --areia: #d4c4a8;
+            --areia-clara: #f5f0e8;
+            --madeira: #a67c52;
+            --madeira-escura: #7a5c3a;
+            --branco: #ffffff;
+            --creme: #faf8f4;
+            --cinza-escuro: #2c2c2c;
+            --cinza-medio: #6b6b6b;
+            --alerta: #c0392b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--cinza-escuro);
+            background: var(--branco);
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            background: linear-gradient(135deg, var(--cinza-escuro) 0%, #1a1a1a 40%, #3a3a3a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.8;
+        }
+
+        .hero-content { position: relative; z-index: 2; padding: 0 20px; }
+
+        .hero-badge {
+            display: inline-block;
+            border: 1px solid var(--areia);
+            color: var(--areia);
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            padding: 8px 24px;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: var(--branco);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span { color: var(--areia); font-style: italic; }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.5);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+        }
+
+        .hero-stats { display: flex; gap: 60px; justify-content: center; flex-wrap: wrap; }
+        .hero-stat { text-align: center; }
+        .hero-stat-value { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--areia); font-weight: 600; }
+        .hero-stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+
+        .scroll-indicator { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; animation: bounce 2s infinite; }
+        .scroll-indicator svg { width: 24px; height: 24px; stroke: var(--areia); }
+        @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(10px); } }
+
+        section { padding: 100px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        .section-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--madeira); font-weight: 600; margin-bottom: 12px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--cinza-escuro); font-weight: 600; margin-bottom: 20px; line-height: 1.2; }
+        .section-desc { font-size: 1.05rem; color: var(--cinza-medio); line-height: 1.8; max-width: 700px; font-weight: 300; }
+
+        .localizacao { background: var(--areia-clara); }
+
+        .loc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 50px; align-items: center; }
+        .loc-details { display: flex; flex-direction: column; gap: 24px; }
+        .loc-item { display: flex; gap: 16px; align-items: flex-start; }
+        .loc-icon { width: 40px; height: 40px; background: var(--concreto); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .loc-icon svg { width: 20px; height: 20px; stroke: var(--areia); fill: none; }
+        .loc-item h4 { font-size: 0.95rem; font-weight: 600; color: var(--cinza-escuro); margin-bottom: 2px; }
+        .loc-item p { font-size: 0.85rem; color: var(--cinza-medio); line-height: 1.5; }
+        .lote-svg-container { background: var(--branco); border-radius: 16px; padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+
+        .terreno-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 50px; }
+        .terreno-card { background: var(--branco); border: 1px solid #e8e8e8; border-radius: 12px; padding: 32px 28px; text-align: center; transition: all 0.3s; }
+        .terreno-card:hover { border-color: var(--madeira); box-shadow: 0 8px 30px rgba(166,124,82,0.12); transform: translateY(-4px); }
+        .terreno-card-icon { width: 48px; height: 48px; margin: 0 auto 16px; background: var(--areia-clara); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .terreno-card-icon svg { width: 22px; height: 22px; stroke: var(--pedra); }
+        .terreno-card h4 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--cinza-escuro); margin-bottom: 4px; }
+        .terreno-card p { font-size: 0.8rem; color: var(--cinza-medio); text-transform: uppercase; letter-spacing: 1px; }
+
+        .regras { background: var(--concreto); color: var(--branco); }
+        .regras .section-label { color: var(--areia); }
+        .regras .section-title { color: var(--branco); }
+        .regras .section-desc { color: rgba(255,255,255,0.6); }
+        .regras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin-top: 50px; }
+        .regra-item { border-left: 2px solid var(--areia); padding-left: 20px; }
+        .regra-item h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--areia); margin-bottom: 8px; font-weight: 500; }
+        .regra-item .valor { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--branco); font-weight: 600; margin-bottom: 4px; }
+        .regra-item .detalhe { font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+        .alert-box { background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.4); border-radius: 12px; padding: 24px 28px; margin-top: 40px; display: flex; gap: 16px; align-items: flex-start; }
+        .alert-box svg { width: 24px; height: 24px; stroke: #e74c3c; flex-shrink: 0; margin-top: 2px; }
+        .alert-box .alert-content h4 { color: #e74c3c; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .alert-box .alert-content p { color: rgba(255,255,255,0.7); font-size: 0.85rem; line-height: 1.6; }
+
+        .beirais { background: var(--areia-clara); }
+        .beiral-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 50px; }
+        .beiral-card { background: var(--branco); border-radius: 12px; padding: 32px; text-align: center; border: 1px solid #e0e0e0; }
+        .beiral-card .numero { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--cinza-escuro); font-weight: 700; }
+        .beiral-card .label { font-size: 0.8rem; color: var(--cinza-medio); margin-top: 4px; line-height: 1.4; }
+        .beiral-card .status { display: inline-block; margin-top: 12px; font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .status-ok { background: rgba(39,174,96,0.1); color: #27ae60; }
+        .status-atencao { background: rgba(243,156,18,0.1); color: #f39c12; }
+
+        .conformidade { background: var(--branco); }
+        .conf-table { width: 100%; border-collapse: collapse; margin-top: 40px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .conf-table thead th { background: var(--concreto); color: var(--branco); padding: 16px 20px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; }
+        .conf-table tbody td { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+        .conf-table tbody tr:last-child td { border-bottom: none; }
+        .conf-table tbody tr:nth-child(even) { background: var(--creme); }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-ok { background: rgba(39,174,96,0.1); color: #27ae60; }
+        .badge-warn { background: rgba(243,156,18,0.1); color: #f39c12; }
+
+        .deck-section { background: var(--concreto); color: var(--branco); }
+        .deck-section .section-label { color: var(--areia); }
+        .deck-section .section-title { color: var(--branco); }
+        .deck-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px; align-items: center; }
+        .deck-specs { display: flex; flex-direction: column; gap: 20px; }
+        .deck-spec { border-left: 2px solid var(--areia); padding-left: 20px; }
+        .deck-spec h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--areia); margin-bottom: 4px; }
+        .deck-spec p { font-size: 0.95rem; color: rgba(255,255,255,0.7); }
+
+        .garagem-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 40px; margin-top: 40px; }
+        .garagem-box h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--branco); margin-bottom: 16px; }
+        .garagem-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .garagem-spec { text-align: center; }
+        .garagem-spec .valor { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--areia); }
+        .garagem-spec .label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+        .procedimentos { background: var(--areia-clara); }
+        .proc-timeline { margin-top: 50px; position: relative; padding-left: 40px; }
+        .proc-timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--madeira); }
+        .proc-step { position: relative; margin-bottom: 32px; }
+        .proc-step::before { content: ''; position: absolute; left: -32px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--madeira); border: 3px solid var(--areia-clara); }
+        .proc-step h4 { font-size: 0.95rem; font-weight: 600; color: var(--cinza-escuro); margin-bottom: 4px; }
+        .proc-step p { font-size: 0.85rem; color: var(--cinza-medio); line-height: 1.6; }
+
+        footer { background: #1a1a1a; padding: 50px 20px; text-align: center; }
+        footer p { color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 2px; }
+        footer .footer-marca { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--areia); margin-bottom: 8px; }
+
+        @media (max-width: 768px) {
+            .loc-grid, .deck-grid { grid-template-columns: 1fr; }
+            .hero-stats { gap: 30px; }
+            .beiral-grid, .garagem-specs { grid-template-columns: 1fr; }
+            section { padding: 60px 20px; }
+        }
+    /* === ATF Topbar === */
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Xangri-l&aacute; &middot; Rio Grande do Sul</div>
+            <h1>Resid&ecirc;ncia <span>Seasons</span></h1>
+            <p class="hero-subtitle">Condom&iacute;nio Seasons &middot; Xangri-l&aacute;/RS</p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">900</div>
+                    <div class="hero-stat-label">m&sup2; de terreno</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">700</div>
+                    <div class="hero-stat-label">m&sup2; &aacute;rea fechada</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">2</div>
+                    <div class="hero-stat-label">pavimentos</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">175</div>
+                    <div class="hero-stat-label">m&sup2; &aacute;rea externa</div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </div>
+    </section>
+
+    <!-- LOCALIZAÇÃO -->
+    <section class="localizacao">
+        <div class="container">
+            <div class="loc-grid">
+                <div>
+                    <p class="section-label">Localiza&ccedil;&atilde;o</p>
+                    <h2 class="section-title">Condom&iacute;nio Seasons</h2>
+                    <p class="section-desc">Condom&iacute;nio horizontal de lotes de alto padr&atilde;o em Xangri-l&aacute;/RS, com lago artificial, heliponto e &aacute;reas de lazer. Dois lotes unificados, com frente para via interna e fundos para o lago.</p>
+                    <div class="loc-details" style="margin-top: 32px;">
+                        <div class="loc-item">
+                            <div class="loc-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                            <div><h4>Endere&ccedil;o</h4><p>Xangri-l&aacute;, RS</p></div>
+                        </div>
+                        <div class="loc-item">
+                            <div class="loc-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg></div>
+                            <div><h4>Terreno</h4><p>900 m&sup2; (dois lotes unificados)<br>Zona Residencial</p></div>
+                        </div>
+                        <div class="loc-item">
+                            <div class="loc-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                            <div><h4>Confronta&ccedil;&otilde;es</h4><p>Frente: Via pavimentada interna<br>Fundos: Lago artificial do condom&iacute;nio</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lote-svg-container">
+                    <svg viewBox="0 0 600 550" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+                        <rect x="0" y="0" width="600" height="550" fill="#faf8f4" rx="8"/>
+                        <path d="M40,440 Q100,420 200,435 Q300,450 400,430 Q500,410 560,440 L560,510 Q500,520 400,515 Q300,525 200,515 Q100,520 40,510 Z" fill="#c5dbe8" stroke="#8fb8d4" stroke-width="1"/>
+                        <text x="300" y="485" font-family="Inter" font-size="11" fill="#5a8aab" text-anchor="middle" font-weight="500">LAGO ARTIFICIAL</text>
+                        <rect x="40" y="40" width="520" height="40" fill="#e0ddd5" rx="4"/>
+                        <text x="300" y="65" font-family="Inter" font-size="10" fill="#8a8580" text-anchor="middle" font-weight="500">VIA PAVIMENTADA</text>
+                        <rect x="40" y="80" width="520" height="20" fill="#d8e8d0" rx="2"/>
+                        <text x="300" y="94" font-family="Inter" font-size="8" fill="#7a9a6a" text-anchor="middle">PASSEIO (GRAMA)</text>
+                        <rect x="100" y="100" width="400" height="320" fill="#f0ebe0" stroke="#8c7b6b" stroke-width="2.5"/>
+                        <line x1="300" y1="100" x2="300" y2="420" stroke="#8c7b6b" stroke-width="1" stroke-dasharray="8,6" opacity="0.4"/>
+                        <text x="300" y="140" font-family="Inter" font-size="8" fill="#8c7b6b" text-anchor="middle" opacity="0.6">divisa original</text>
+                        <text x="200" y="125" font-family="Inter" font-size="10" fill="#8c7b6b" text-anchor="middle" font-weight="600">Lote 1</text>
+                        <text x="400" y="125" font-family="Inter" font-size="10" fill="#8c7b6b" text-anchor="middle" font-weight="600">Lote 2</text>
+                        <text x="300" y="260" font-family="Playfair Display" font-size="16" fill="#3a3a3a" text-anchor="middle" font-weight="600">TERRENO UNIFICADO</text>
+                        <text x="300" y="280" font-family="Inter" font-size="11" fill="#8c7b6b" text-anchor="middle">900 m&sup2;</text>
+                        <line x1="100" y1="93" x2="500" y2="93" stroke="#a67c52" stroke-width="1"/>
+                        <text x="300" y="88" font-family="Inter" font-size="11" fill="#a67c52" text-anchor="middle" font-weight="600">~30,00m (testada)</text>
+                        <line x1="520" y1="100" x2="520" y2="420" stroke="#a67c52" stroke-width="1"/>
+                        <text x="545" y="265" font-family="Inter" font-size="11" fill="#a67c52" text-anchor="middle" font-weight="600" transform="rotate(90,545,265)">~30,00m (profund.)</text>
+                        <rect x="96" y="416" width="8" height="8" fill="#c0392b" rx="1"/>
+                        <rect x="496" y="416" width="8" height="8" fill="#c0392b" rx="1"/>
+                        <g transform="translate(555,50)">
+                            <circle cx="0" cy="0" r="20" fill="none" stroke="#3a3a3a" stroke-width="1"/>
+                            <line x1="0" y1="16" x2="0" y2="-16" stroke="#3a3a3a" stroke-width="1.5"/>
+                            <line x1="-12" y1="0" x2="12" y2="0" stroke="#3a3a3a" stroke-width="1"/>
+                            <polygon points="0,-20 -4,-14 4,-14" fill="#3a3a3a"/>
+                            <text x="0" y="-26" font-family="Inter" font-size="10" fill="#3a3a3a" text-anchor="middle" font-weight="600">N</text>
+                        </g>
+                        <text x="300" y="540" font-family="Inter" font-size="9" fill="#8a8580" text-anchor="middle">FRENTE &mdash; Via Interna</text>
+                        <text x="300" y="460" font-family="Inter" font-size="9" fill="#5a8aab" text-anchor="middle">FUNDOS &mdash; Lago</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TERRENO -->
+    <section>
+        <div class="container">
+            <p class="section-label">Terreno</p>
+            <h2 class="section-title">Dimens&otilde;es e &Aacute;reas</h2>
+            <p class="section-desc">Dois lotes unificados, formato retangular, com vista para o lago nos fundos.</p>
+            <div class="terreno-cards">
+                <div class="terreno-card">
+                    <div class="terreno-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 21h18M3 21V3l18 18"/></svg></div>
+                    <h4>~30m</h4><p>Testada (Frente)</p>
+                </div>
+                <div class="terreno-card">
+                    <div class="terreno-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><line x1="12" y1="3" x2="12" y2="21"/><circle cx="12" cy="3" r="1.5"/><circle cx="12" cy="21" r="1.5"/></svg></div>
+                    <h4>~30m</h4><p>Profundidade</p>
+                </div>
+                <div class="terreno-card">
+                    <div class="terreno-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="1"/></svg></div>
+                    <h4>900 m&sup2;</h4><p>&Aacute;rea Total</p>
+                </div>
+                <div class="terreno-card">
+                    <div class="terreno-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/></svg></div>
+                    <h4>25 &times; 14m</h4><p>Edifica&ccedil;&atilde;o (por piso)</p>
+                </div>
+                <div class="terreno-card">
+                    <div class="terreno-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
+                    <h4>350 m&sup2;</h4><p>&Aacute;rea fechada / piso</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REGRAS CONSTRUTIVAS -->
+    <section class="regras">
+        <div class="container">
+            <p class="section-label">C&oacute;digo de Obras</p>
+            <h2 class="section-title">Regras Construtivas</h2>
+            <p class="section-desc">Par&acirc;metros urban&iacute;sticos do C&oacute;digo de Obras Seasons (Janeiro/2025), ajustados para lotes unificados.</p>
+            <div class="regras-grid">
+                <div class="regra-item"><h4>Taxa de Ocupa&ccedil;&atilde;o</h4><div class="valor">60%</div><div class="detalhe">M&aacute;x. 540 m&sup2; de proje&ccedil;&atilde;o</div></div>
+                <div class="regra-item"><h4>&Iacute;nd. Aproveitamento</h4><div class="valor">1,5&times;</div><div class="detalhe">M&aacute;x. 1.350 m&sup2; de &aacute;rea constru&iacute;da</div></div>
+                <div class="regra-item"><h4>Altura M&aacute;xima</h4><div class="valor">7m</div><div class="detalhe">Edifica&ccedil;&atilde;o (da CR) / Cumeeira 11m</div></div>
+                <div class="regra-item"><h4>Pavimentos</h4><div class="valor">2</div><div class="detalhe">M&aacute;ximo</div></div>
+                <div class="regra-item"><h4>Recuo Frontal</h4><div class="valor">4m</div><div class="detalhe">Do alinhamento do lote</div></div>
+                <div class="regra-item"><h4>Recuo Fundos</h4><div class="valor">6m</div><div class="detalhe">Da divisa de fundos (lago)</div></div>
+                <div class="regra-item"><h4>Recuo Lateral</h4><div class="valor">3m + 3m</div><div class="detalhe">Somat&oacute;rio 6m (unificados) / m&iacute;n. 2m</div></div>
+                <div class="regra-item"><h4>Permeabilidade</h4><div class="valor">20%</div><div class="detalhe">M&iacute;n. 180 m&sup2;</div></div>
+            </div>
+            <div class="alert-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <div class="alert-content">
+                    <h4>Restri&ccedil;&atilde;o Especial &mdash; Divisa entre Lotes</h4>
+                    <p>Na divisa entre os dois lotes (tubula&ccedil;&atilde;o pluvial), &eacute; <strong>proibida escava&ccedil;&atilde;o ou funda&ccedil;&atilde;o superior a 80cm</strong> de profundidade. Funda&ccedil;&atilde;o tipo Radier obrigat&oacute;ria nesta faixa. (Item 6.14)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BEIRAIS -->
+    <section class="beirais">
+        <div class="container">
+            <p class="section-label">Cobertura</p>
+            <h2 class="section-title">Beirais e Proje&ccedil;&otilde;es</h2>
+            <p class="section-desc">An&aacute;lise de conformidade dos beirais com o C&oacute;digo de Obras Seasons.</p>
+            <div class="beiral-grid">
+                <div class="beiral-card">
+                    <div class="numero">3,0m</div>
+                    <div class="label">Beiral Fundos<br>(cobre 75 m&sup2; de deck)</div>
+                    <div class="status status-atencao">Consultar Conselho</div>
+                </div>
+                <div class="beiral-card">
+                    <div class="numero">3,0m</div>
+                    <div class="label">Beiral Frontal<br>(proje&ccedil;&atilde;o sobre recuo)</div>
+                    <div class="status status-atencao">Excede 1,20m permitido</div>
+                </div>
+                <div class="beiral-card">
+                    <div class="numero">1,5m</div>
+                    <div class="label">Beiral Lateral<br>(ambos os lados)</div>
+                    <div class="status status-ok">Conforme (recuo 3m)</div>
+                </div>
+            </div>
+            <div style="background: var(--branco); border-radius: 12px; padding: 28px; margin-top: 32px; border: 1px solid #e0e0e0;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--cinza-escuro); margin-bottom: 12px;">Notas de Conformidade</h3>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px;">
+                    <li style="font-size: 0.85rem; color: var(--cinza-medio); line-height: 1.6; padding-left: 16px; border-left: 2px solid #27ae60;">
+                        <strong style="color: var(--cinza-escuro);">Lateral 1,5m:</strong> Conforme. Com recuo de 3m, beiral pode chegar a 2,25m (0,75m + aumento proporcional de 1,5m).
+                    </li>
+                    <li style="font-size: 0.85rem; color: var(--cinza-medio); line-height: 1.6; padding-left: 16px; border-left: 2px solid #f39c12;">
+                        <strong style="color: var(--cinza-escuro);">Frontal 3,0m:</strong> Excede o balan&ccedil;o m&aacute;ximo de 1,20m. Submeter ao Conselho T&eacute;cnico como elemento de fachada ou complementar com pergolado.
+                    </li>
+                    <li style="font-size: 0.85rem; color: var(--cinza-medio); line-height: 1.6; padding-left: 16px; border-left: 2px solid #f39c12;">
+                        <strong style="color: var(--cinza-escuro);">Fundos 3,0m:</strong> O beiral pode avan&ccedil;ar 1,20m sobre o recuo. Os 1,8m restantes ficam dentro da &aacute;rea edific&aacute;vel. Consultar CT para tratamento como pergolado coberto.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DECK + PISCINA -->
+    <section class="deck-section">
+        <div class="container">
+            <p class="section-label">Lazer</p>
+            <h2 class="section-title">&Aacute;rea Externa &mdash; Fundos</h2>
+            <div class="deck-grid">
+                <div class="deck-specs">
+                    <div class="deck-spec">
+                        <h4>&Aacute;rea Coberta pelo Beiral</h4>
+                        <p>75 m&sup2; (25m &times; 3m) &mdash; cobertos pelo beiral de 3m dos fundos. Piso em madeira nobre ou porcelanato.</p>
+                    </div>
+                    <div class="deck-spec">
+                        <h4>&Aacute;rea Descoberta + Piscina</h4>
+                        <p>100 m&sup2; al&eacute;m do beiral, com a piscina centralizada e paisagismo perimetral.</p>
+                    </div>
+                    <div class="deck-spec">
+                        <h4>Piscina</h4>
+                        <p>9m de largura &times; 3m de comprimento, posicionada centralmente. Borda infinita voltada ao lago.</p>
+                    </div>
+                    <div class="deck-spec">
+                        <h4>Jacuzi</h4>
+                        <p>3m &times; 3m, quadrada, anexada &agrave; esquerda da piscina. Aquecida com jatos de hidromassagem.</p>
+                    </div>
+                    <div class="deck-spec">
+                        <h4>Deck Suspenso (Fundos)</h4>
+                        <p>Permitido deck rebaixado a 70cm do marco de divisa, ancoragem a 1,50m das divisas.</p>
+                    </div>
+                </div>
+                <div>
+                    <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+                        <rect x="0" y="0" width="500" height="420" fill="rgba(255,255,255,0.03)" rx="12"/>
+
+                        <!-- Edificação -->
+                        <rect x="50" y="20" width="400" height="70" fill="rgba(212,196,168,0.3)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+                        <text x="250" y="60" font-family="Inter" font-size="11" fill="rgba(255,255,255,0.5)" text-anchor="middle">EDIFICA&Ccedil;&Atilde;O 25m &times; 14m</text>
+
+                        <!-- Beiral 3m -->
+                        <rect x="50" y="90" width="400" height="55" fill="rgba(166,124,82,0.15)" stroke="rgba(212,196,168,0.4)" stroke-width="1" stroke-dasharray="6,4"/>
+                        <text x="250" y="122" font-family="Inter" font-size="10" fill="var(--areia)" text-anchor="middle" font-weight="500">BEIRAL 3m &mdash; 75 m&sup2; cobertos</text>
+
+                        <!-- Área descoberta 100m² -->
+                        <rect x="50" y="145" width="400" height="140" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+                        <text x="250" y="165" font-family="Inter" font-size="9" fill="rgba(255,255,255,0.4)" text-anchor="middle">&Aacute;REA DESCOBERTA &mdash; 100 m&sup2;</text>
+
+                        <!-- Jacuzi 3x3 (esquerda) -->
+                        <rect x="115" y="195" width="55" height="55" rx="6" fill="rgba(100,180,220,0.25)" stroke="rgba(140,200,240,0.5)" stroke-width="1.5"/>
+                        <text x="142" y="225" font-family="Inter" font-size="8" fill="rgba(140,200,240,0.8)" text-anchor="middle" font-weight="600">JACUZI</text>
+                        <text x="142" y="237" font-family="Inter" font-size="7" fill="rgba(140,200,240,0.5)" text-anchor="middle">3&times;3m</text>
+
+                        <!-- Piscina 9x3 (central, anexada à jacuzi) -->
+                        <rect x="170" y="195" width="165" height="55" rx="6" fill="rgba(100,180,220,0.3)" stroke="rgba(140,200,240,0.6)" stroke-width="1.5"/>
+                        <text x="252" y="220" font-family="Inter" font-size="10" fill="rgba(140,200,240,0.9)" text-anchor="middle" font-weight="600">PISCINA</text>
+                        <text x="252" y="237" font-family="Inter" font-size="8" fill="rgba(140,200,240,0.5)" text-anchor="middle">9m &times; 3m</text>
+
+                        <!-- Cotas piscina -->
+                        <line x1="115" y1="260" x2="335" y2="260" stroke="var(--areia)" stroke-width="0.8" opacity="0.5"/>
+                        <text x="225" y="273" font-family="Inter" font-size="8" fill="var(--areia)" text-anchor="middle" opacity="0.7">12m total (jacuzi + piscina)</text>
+
+                        <!-- Marcos -->
+                        <rect x="46" y="330" width="8" height="8" fill="#c0392b" rx="1"/>
+                        <rect x="446" y="330" width="8" height="8" fill="#c0392b" rx="1"/>
+
+                        <!-- Lago -->
+                        <path d="M30,350 Q150,335 250,345 Q350,355 470,340 L470,400 Q350,410 250,405 Q150,410 30,400 Z" fill="rgba(100,180,220,0.15)" stroke="rgba(140,200,240,0.3)" stroke-width="1"/>
+                        <text x="250" y="380" font-family="Inter" font-size="10" fill="rgba(140,200,240,0.5)" text-anchor="middle">LAGO</text>
+
+                        <!-- Cotas verticais -->
+                        <line x1="30" y1="90" x2="30" y2="145" stroke="var(--areia)" stroke-width="0.8" opacity="0.5"/>
+                        <text x="25" y="122" font-family="Inter" font-size="8" fill="var(--areia)" text-anchor="end" opacity="0.7">3m</text>
+                        <line x1="470" y1="145" x2="470" y2="335" stroke="var(--areia)" stroke-width="0.8" opacity="0.5"/>
+                        <text x="485" y="245" font-family="Inter" font-size="8" fill="var(--areia)" opacity="0.7">6m recuo</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="garagem-box">
+                <h3>Garagem &mdash; 3 Vagas</h3>
+                <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 24px;">Lateral esquerda da frente. Acesso m&aacute;x. 50% da testada (15m).</p>
+                <div class="garagem-specs">
+                    <div class="garagem-spec"><div class="valor">3</div><div class="label">Vagas cobertas (SUVs)</div></div>
+                    <div class="garagem-spec"><div class="valor">~64 m&sup2;</div><div class="label">8,5m &times; 7,5m</div></div>
+                    <div class="garagem-spec"><div class="valor">~15m</div><div class="label">Acesso m&aacute;x. (50% testada)</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONFORMIDADE -->
+    <section class="conformidade">
+        <div class="container">
+            <p class="section-label">Verifica&ccedil;&atilde;o</p>
+            <h2 class="section-title">An&aacute;lise de Conformidade</h2>
+            <p class="section-desc">Verifica&ccedil;&atilde;o contra o C&oacute;digo de Obras Seasons (Jan/2025).</p>
+            <table class="conf-table">
+                <thead><tr><th>Par&acirc;metro</th><th>Permitido</th><th>Projeto</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>&Aacute;rea Constru&iacute;da</strong></td><td>M&aacute;x. 1.350 m&sup2;</td><td>700 m&sup2;</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Taxa Ocupa&ccedil;&atilde;o</strong></td><td>M&aacute;x. 60% (540 m&sup2;)</td><td>~39% (350 m&sup2;)</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>&Aacute;rea M&iacute;nima</strong></td><td>M&iacute;n. 240 m&sup2;/lote</td><td>700 m&sup2;</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Pavimentos</strong></td><td>M&aacute;x. 2</td><td>2</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Altura</strong></td><td>M&aacute;x. 7m da CR</td><td>~6,4m</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Recuo Frontal</strong></td><td>M&iacute;n. 4m</td><td>4m</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Recuo Fundos</strong></td><td>M&iacute;n. 6m</td><td>6m</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Recuo Lateral</strong></td><td>Total 6m (m&iacute;n. 2m/lado)</td><td>2,5m + 2,5m</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Permeabilidade</strong></td><td>M&iacute;n. 20% (180 m&sup2;)</td><td>~38%</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Largura Edifica&ccedil;&atilde;o</strong></td><td>30m &minus; 5m recuos = 25m</td><td>25m</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Beiral Lateral</strong></td><td>M&aacute;x. 1,75m (recuo 2,5m)</td><td>1,5m</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                    <tr><td><strong>Beiral Frontal</strong></td><td>M&aacute;x. 1,20m balan&ccedil;o</td><td>3,0m</td><td><span class="badge badge-warn">Consultar CT</span></td></tr>
+                    <tr><td><strong>Beiral Fundos</strong></td><td>M&aacute;x. 1,20m balan&ccedil;o</td><td>3,0m</td><td><span class="badge badge-warn">Consultar CT</span></td></tr>
+                    <tr><td><strong>Funda&ccedil;&atilde;o na divisa</strong></td><td>M&aacute;x. 80cm na divisa</td><td>Radier</td><td><span class="badge badge-ok">Conforme</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 3D -->
+    <section style="padding: 0; background: #1a1a1a;">
+        <div class="container" style="max-width: 100%; padding: 0;">
+            <div style="text-align: center; padding: 40px 20px 20px;">
+                <p class="section-label" style="color: var(--areia);">Visualiza&ccedil;&atilde;o</p>
+                <h2 class="section-title" style="color: #fff;">Modelo 3D &mdash; Proje&ccedil;&atilde;o Solar</h2>
+                <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">Arraste para girar &middot; Scroll para zoom &middot; Controle a hora e a data</p>
+            </div>
+            <div id="scene3d" style="position: relative; width: 100%; height: 80vh; min-height: 600px; overflow: hidden; background: #87CEEB;">
+                <div id="info" style="position:absolute;top:16px;left:16px;z-index:10;background:rgba(26,24,20,0.85);color:#fff;padding:14px 18px;border-radius:8px;font-size:13px;line-height:1.6;pointer-events:none;max-width:280px;">
+                    <h2 style="font-size:15px;margin-bottom:6px;color:#d4c4a8;font-family:'Inter',sans-serif;">Resid&ecirc;ncia Seasons</h2>
+                    <span style="color:#aaa;">Dois lotes unificados</span><br>
+                    <span style="color:#aaa;">Edifica&ccedil;&atilde;o: 25&times;14m &middot; 2 pisos &middot; 700m&sup2;</span><br>
+                    <span style="color:#aaa;">Duplo beiral (teto + laje 2&ordm; piso)</span><br>
+                    <span style="color:#aaa;">Fundos: 75m&sup2; coberto + 100m&sup2; travertino</span><br>
+                    <span style="color:#aaa;">Piscina 9&times;3m + Jacuzi 3&times;3m</span><br>
+                    <span style="color:#aaa;">Casa olha p/ lago: 216&deg; SW</span>
+                </div>
+                <div id="solar-panel" style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(26,24,20,0.85);color:#e8ddd0;padding:12px 18px;border-radius:12px;font-size:12px;backdrop-filter:blur(8px);min-width:460px;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <label style="color:#999;font-size:11px;min-width:40px;">Hora</label>
+                        <input type="range" id="timeSlider" min="5" max="20" step="0.1" value="10" style="flex:1;height:5px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.15);border-radius:3px;outline:none;">
+                        <div id="timeDisplay" style="font-size:20px;font-weight:700;color:#d4a054;min-width:55px;text-align:center;">10:00</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <label style="color:#999;font-size:11px;min-width:40px;">Data</label>
+                        <div class="solar-dates" style="display:flex;gap:5px;flex-wrap:wrap;">
+                            <button data-day="172" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">21 Jun &middot; Inverno</button>
+                            <button data-day="265" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">22 Set &middot; Equin&oacute;cio</button>
+                            <button data-day="355" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">21 Dez &middot; Ver&atilde;o</button>
+                            <button data-day="80" style="padding:2px 7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#b0a090;border-radius:4px;font-size:10px;cursor:pointer;">21 Mar &middot; Equin&oacute;cio</button>
+                            <button data-day="96" class="active" style="padding:2px 7px;border:1px solid #d4a054;background:rgba(212,160,84,0.3);color:#d4a054;border-radius:4px;font-size:10px;cursor:pointer;">5 Abr &middot; Hoje</button>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <div style="font-size:11px;color:#887766;display:flex;gap:14px;flex-wrap:wrap;">
+                            <span>Azimute: <strong id="azVal">&mdash;</strong></span>
+                            <span>Altitude: <strong id="altVal">&mdash;</strong></span>
+                            <span>Nascer: <strong id="sunRise">&mdash;</strong></span>
+                            <span>P&ocirc;r: <strong id="sunSet">&mdash;</strong></span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="font-size:10px;color:#665;">Xangri-l&aacute;/RS &middot; Elev. 10m &middot; Arrastar p/ girar &middot; Scroll p/ zoom</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+    </script>
+
+    <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const container = document.getElementById('scene3d');
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87CEEB);
+    scene.fog = new THREE.Fog(0x87CEEB, 120, 280);
+
+    const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 500);
+    camera.position.set(-35, 25, 35);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.3;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 3, -2);
+
+    const ambientLight = new THREE.AmbientLight(0x8FAFC5, 0.5);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xFFF5E0, 1.5);
+    dirLight.position.set(30, 40, 20);
+    dirLight.castShadow = true;
+    dirLight.shadow.camera.left = -45;
+    dirLight.shadow.camera.right = 45;
+    dirLight.shadow.camera.top = 45;
+    dirLight.shadow.camera.bottom = -45;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    scene.add(dirLight);
+
+    const hemiLight = new THREE.HemisphereLight(0xC5D8E8, 0x5A7A4A, 0.5);
+    scene.add(hemiLight);
+
+    const lotW = 30, lotD = 30, halfW = lotW / 2, halfD = lotD / 2;
+
+    const terrainSize = 100, segments = 80;
+    const terrainGeo = new THREE.PlaneGeometry(terrainSize, terrainSize, segments, segments);
+    terrainGeo.rotateX(-Math.PI / 2);
+
+    const positions = terrainGeo.attributes.position;
+    const colors = new Float32Array(positions.count * 3);
+
+    for (let i = 0; i < positions.count; i++) {
+      const x = positions.getX(i), z = positions.getZ(i);
+      const insideLot = x >= -halfW && x <= halfW && z >= -halfD && z <= halfD;
+      const insideAPP = x < -halfW && x >= -halfW - 37 && z >= -halfD && z <= halfD;
+      if (insideLot) { colors[i*3] = 0.40; colors[i*3+1] = 0.52; colors[i*3+2] = 0.32; }
+      else if (insideAPP) { colors[i*3] = 0.15; colors[i*3+1] = 0.40; colors[i*3+2] = 0.12; }
+      else { colors[i*3] = 0.28; colors[i*3+1] = 0.40; colors[i*3+2] = 0.22; }
+      if (z < -halfD - 1) { positions.setY(i, -0.4); colors[i*3] = 0.30; colors[i*3+1] = 0.52; colors[i*3+2] = 0.62; }
+    }
+    terrainGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    terrainGeo.computeVertexNormals();
+
+    const terrain = new THREE.Mesh(terrainGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0.0 }));
+    terrain.receiveShadow = true;
+    scene.add(terrain);
+
+    const lakeGeo = new THREE.PlaneGeometry(terrainSize, 18);
+    lakeGeo.rotateX(-Math.PI / 2);
+    const lake = new THREE.Mesh(lakeGeo, new THREE.MeshStandardMaterial({ color: 0x4A8AB0, roughness: 0.1, metalness: 0.3, transparent: true, opacity: 0.65 }));
+    lake.position.set(0, -0.25, -halfD - 10);
+    lake.receiveShadow = true;
+    scene.add(lake);
+
+    const treeTrunkMat = new THREE.MeshStandardMaterial({ color: 0x5a4030, roughness: 0.95 });
+    const treeLeafMat = new THREE.MeshStandardMaterial({ color: 0x2a6a1a, roughness: 0.85 });
+    const treeLeafMat2 = new THREE.MeshStandardMaterial({ color: 0x1a5a10, roughness: 0.85 });
+
+    function addTree(x, z, h, r) {
+      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, h * 0.5, 6), treeTrunkMat);
+      trunk.position.set(x, h * 0.25, z); trunk.castShadow = true; scene.add(trunk);
+      const leafMat = Math.random() > 0.5 ? treeLeafMat : treeLeafMat2;
+      const crown = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), leafMat);
+      crown.position.set(x, h * 0.6 + r * 0.3, z); crown.castShadow = true; scene.add(crown);
+    }
+
+    for (let i = 0; i < 40; i++) {
+      const x = -halfW - 2 - Math.random() * 33;
+      const z = -halfD + Math.random() * lotD;
+      addTree(x, z, 3 + Math.random() * 5, 1.5 + Math.random() * 2);
+    }
+
+    const appCanvas = document.createElement('canvas');
+    appCanvas.width = 256; appCanvas.height = 64;
+    const appCtx = appCanvas.getContext('2d');
+    appCtx.fillStyle = '#1a5a10';
+    appCtx.font = 'bold 24px Arial';
+    appCtx.textAlign = 'center';
+    appCtx.fillText('APP ~1.100m\u00B2', 128, 40);
+    const appSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(appCanvas), transparent: true, opacity: 0.7 }));
+    appSprite.position.set(-halfW - 18, 6, 0);
+    appSprite.scale.set(14, 3.5, 1);
+    scene.add(appSprite);
+
+    const lotBnd = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-halfW, 0.1, halfD), new THREE.Vector3(halfW, 0.1, halfD),
+      new THREE.Vector3(halfW, 0.1, -halfD), new THREE.Vector3(-halfW, 0.1, -halfD),
+      new THREE.Vector3(-halfW, 0.1, halfD),
+    ]);
+    scene.add(new THREE.Line(lotBnd, new THREE.LineBasicMaterial({ color: 0x8c7b6b })));
+
+    const divGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0.12, halfD), new THREE.Vector3(0, 0.12, -halfD),
+    ]);
+    const divLine = new THREE.Line(divGeo, new THREE.LineDashedMaterial({ color: 0xcc4444, dashSize: 1, gapSize: 0.5 }));
+    divLine.computeLineDistances();
+    scene.add(divLine);
+
+    const roadGeo = new THREE.PlaneGeometry(lotW + 30, 6);
+    roadGeo.rotateX(-Math.PI / 2);
+    const road = new THREE.Mesh(roadGeo, new THREE.MeshStandardMaterial({ color: 0x555555, roughness: 0.9 }));
+    road.position.set(0, 0.02, halfD + 6); road.receiveShadow = true; scene.add(road);
+
+    const passeioGeo = new THREE.PlaneGeometry(lotW, 3);
+    passeioGeo.rotateX(-Math.PI / 2);
+    const passeio = new THREE.Mesh(passeioGeo, new THREE.MeshStandardMaterial({ color: 0x5a8a4a, roughness: 0.95 }));
+    passeio.position.set(0, 0.03, halfD + 1.5); scene.add(passeio);
+
+    const concreteMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.6, metalness: 0.1 });
+    const stoneMat = new THREE.MeshStandardMaterial({ color: 0x9a8a7a, roughness: 0.92, metalness: 0.0 });
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x8B7355, roughness: 0.75, metalness: 0.0 });
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x88B8D0, roughness: 0.05, metalness: 0.7, transparent: true, opacity: 0.3 });
+    const darkMat = new THREE.MeshStandardMaterial({ color: 0x6e6e6a, roughness: 0.85, metalness: 0.03 });
+    const travertinoMat = new THREE.MeshStandardMaterial({ color: 0xd8c8a8, roughness: 0.45, metalness: 0.05 });
+
+    const bldgW = 25, bldgD = 14, floorH = 3.0, slabH = 0.25, CR = 0.5;
+    const recuoFront = 4, recuoBack = 6, recuoLat = 2.5;
+    const bldgFrontZ = halfD - recuoFront;
+    const bldgBackZ = bldgFrontZ - bldgD;
+    const bldgCenterZ = (bldgFrontZ + bldgBackZ) / 2;
+    const bldgCenterX = 0;
+
+    const terreoGeo = new THREE.BoxGeometry(bldgW, floorH, bldgD);
+    const terreo2 = new THREE.Mesh(terreoGeo, stoneMat);
+    terreo2.position.set(bldgCenterX, CR + floorH / 2, bldgCenterZ);
+    terreo2.castShadow = true; terreo2.receiveShadow = true; scene.add(terreo2);
+
+    const lajeOverhangFront = 1.5, lajeOverhangBack = 3.0, lajeOverhangLat = 1.5;
+    const laje1W = bldgW + lajeOverhangLat * 2;
+    const laje1D = bldgD + lajeOverhangFront + lajeOverhangBack;
+    const laje1Geo = new THREE.BoxGeometry(laje1W, slabH, laje1D);
+    const laje1 = new THREE.Mesh(laje1Geo, concreteMat);
+    const laje1Y = CR + floorH + slabH / 2;
+    const laje1CenterZ = bldgCenterZ + (lajeOverhangFront - lajeOverhangBack) / 2;
+    laje1.position.set(bldgCenterX, laje1Y, laje1CenterZ);
+    laje1.castShadow = true; laje1.receiveShadow = true; scene.add(laje1);
+
+    const supGeo = new THREE.BoxGeometry(bldgW, floorH, bldgD);
+    const superior = new THREE.Mesh(supGeo, darkMat);
+    superior.position.set(bldgCenterX, CR + floorH + slabH + floorH / 2, bldgCenterZ);
+    superior.castShadow = true; superior.receiveShadow = true; scene.add(superior);
+
+    const roofOverhangFront = 1.5, roofOverhangBack = 3.0, roofOverhangLat = 1.5;
+    const roofW = bldgW + roofOverhangLat * 2;
+    const roofD = bldgD + roofOverhangFront + roofOverhangBack;
+    const roofGeo = new THREE.BoxGeometry(roofW, slabH, roofD);
+    const roofY = CR + floorH * 2 + slabH * 2 - slabH / 2;
+    const roofCenterZ = bldgCenterZ + (roofOverhangFront - roofOverhangBack) / 2;
+    const roof = new THREE.Mesh(roofGeo, concreteMat);
+    roof.position.set(bldgCenterX, roofY, roofCenterZ);
+    roof.castShadow = true; roof.receiveShadow = true; scene.add(roof);
+
+    const roofUnderGeo = new THREE.PlaneGeometry(roofW, roofD);
+    roofUnderGeo.rotateX(Math.PI / 2);
+    const roofUnder = new THREE.Mesh(roofUnderGeo, woodMat);
+    roofUnder.position.set(bldgCenterX, roofY - slabH / 2 - 0.01, roofCenterZ);
+    scene.add(roofUnder);
+
+    const laje1UnderGeo = new THREE.PlaneGeometry(laje1W, laje1D);
+    laje1UnderGeo.rotateX(Math.PI / 2);
+    const laje1Under = new THREE.Mesh(laje1UnderGeo, woodMat);
+    laje1Under.position.set(bldgCenterX, laje1Y - slabH / 2 - 0.01, laje1CenterZ);
+    scene.add(laje1Under);
+
+    const winBackGeo1 = new THREE.PlaneGeometry(bldgW - 2, floorH * 0.85);
+    const winBack1 = new THREE.Mesh(winBackGeo1, glassMat);
+    winBack1.position.set(bldgCenterX, CR + floorH * 0.45, bldgBackZ - 0.01);
+    winBack1.rotation.y = Math.PI; scene.add(winBack1);
+
+    const winBackGeo2 = new THREE.PlaneGeometry(bldgW - 3, floorH * 0.75);
+    const winBack2 = new THREE.Mesh(winBackGeo2, glassMat);
+    winBack2.position.set(bldgCenterX, CR + floorH + slabH + floorH * 0.42, bldgBackZ - 0.01);
+    winBack2.rotation.y = Math.PI; scene.add(winBack2);
+
+    const winFrontGeo = new THREE.PlaneGeometry(10, floorH * 0.65);
+    const winFront1 = new THREE.Mesh(winFrontGeo, glassMat);
+    winFront1.position.set(3, CR + floorH * 0.38, bldgFrontZ + 0.01); scene.add(winFront1);
+
+    const winSideGeo = new THREE.PlaneGeometry(6, floorH * 0.5);
+    const winLeft = new THREE.Mesh(winSideGeo, glassMat);
+    winLeft.position.set(-bldgW / 2 - 0.01, CR + floorH * 0.35, bldgCenterZ - 2);
+    winLeft.rotation.y = -Math.PI / 2; scene.add(winLeft);
+
+    const winRight = new THREE.Mesh(winSideGeo.clone(), glassMat);
+    winRight.position.set(bldgW / 2 + 0.01, CR + floorH * 0.35, bldgCenterZ - 2);
+    winRight.rotation.y = Math.PI / 2; scene.add(winRight);
+
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.3, metalness: 0.5 });
+    for (let fx = -bldgW / 2 + 3; fx <= bldgW / 2 - 3; fx += 3) {
+      const frame1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, floorH * 0.85, 0.06), frameMat);
+      frame1.position.set(fx, CR + floorH * 0.45, bldgBackZ - 0.05); scene.add(frame1);
+      const frame2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, floorH * 0.75, 0.06), frameMat);
+      frame2.position.set(fx, CR + floorH + slabH + floorH * 0.42, bldgBackZ - 0.05); scene.add(frame2);
+    }
+
+    const travertinoDist = Math.abs(bldgBackZ - (-halfD));
+    const travertinoW = lotW - recuoLat * 2 + 2;
+    const travertinoGeo2 = new THREE.PlaneGeometry(travertinoW, travertinoDist);
+    travertinoGeo2.rotateX(-Math.PI / 2);
+    const travertino = new THREE.Mesh(travertinoGeo2, travertinoMat);
+    travertino.position.set(bldgCenterX, CR + 0.02, bldgBackZ - travertinoDist / 2);
+    travertino.receiveShadow = true; scene.add(travertino);
+
+    const poolW = 9, poolD = 3;
+    const poolCenterX = -1.5;
+    const poolCenterZ = -halfD + poolD / 2 + 0.3;
+
+    const poolGeo = new THREE.BoxGeometry(poolW, 1.3, poolD);
+    const pool = new THREE.Mesh(poolGeo, new THREE.MeshStandardMaterial({ color: 0x1a5a7a, roughness: 0.2, metalness: 0.1 }));
+    pool.position.set(poolCenterX, CR - 0.65, poolCenterZ); scene.add(pool);
+
+    const waterGeo = new THREE.PlaneGeometry(poolW - 0.15, poolD - 0.15);
+    waterGeo.rotateX(-Math.PI / 2);
+    const water = new THREE.Mesh(waterGeo, new THREE.MeshStandardMaterial({ color: 0x3a9ac0, roughness: 0.02, metalness: 0.35, transparent: true, opacity: 0.55 }));
+    water.position.set(poolCenterX, CR + 0.03, poolCenterZ); scene.add(water);
+
+    const edgeMat = new THREE.MeshStandardMaterial({ color: 0xd8c8a8, roughness: 0.35, metalness: 0.1 });
+    function mkEdge(w, h, d, x, y, z) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), edgeMat);
+      m.position.set(x, y, z); m.castShadow = true; return m;
+    }
+    scene.add(mkEdge(poolW + 0.5, 0.12, 0.25, poolCenterX, CR + 0.1, poolCenterZ + poolD / 2 + 0.12));
+    scene.add(mkEdge(poolW + 0.5, 0.12, 0.25, poolCenterX, CR + 0.1, poolCenterZ - poolD / 2 - 0.12));
+    scene.add(mkEdge(0.25, 0.12, poolD + 0.5, poolCenterX - poolW / 2 - 0.12, CR + 0.1, poolCenterZ));
+
+    const jacW = 3, jacD = 3;
+    const jacCenterX = poolCenterX + poolW / 2 + jacW / 2;
+    const jacCenterZ = poolCenterZ;
+
+    const jacGeo = new THREE.BoxGeometry(jacW, 1.1, jacD);
+    const jac = new THREE.Mesh(jacGeo, new THREE.MeshStandardMaterial({ color: 0x1a5a7a, roughness: 0.2 }));
+    jac.position.set(jacCenterX, CR - 0.55, jacCenterZ); scene.add(jac);
+
+    const jacWaterGeo = new THREE.PlaneGeometry(jacW - 0.2, jacD - 0.2);
+    jacWaterGeo.rotateX(-Math.PI / 2);
+    const jacWater = new THREE.Mesh(jacWaterGeo, new THREE.MeshStandardMaterial({ color: 0x40b8d8, roughness: 0.02, metalness: 0.35, transparent: true, opacity: 0.6 }));
+    jacWater.position.set(jacCenterX, CR + 0.06, jacCenterZ); scene.add(jacWater);
+
+    scene.add(mkEdge(jacW + 0.5, 0.14, 0.25, jacCenterX, CR + 0.12, jacCenterZ + jacD / 2 + 0.12));
+    scene.add(mkEdge(jacW + 0.5, 0.14, 0.25, jacCenterX, CR + 0.12, jacCenterZ - jacD / 2 - 0.12));
+    scene.add(mkEdge(0.25, 0.14, jacD + 0.5, jacCenterX + jacW / 2 + 0.12, CR + 0.12, jacCenterZ));
+
+    const garW = 8.5, garD = 7.5, garH = 3.0;
+    const garCenterX = -bldgW / 2 + garW / 2;
+    const garFrontZ = bldgFrontZ;
+
+    const garGeo = new THREE.BoxGeometry(garW, garH, garD);
+    const garMesh = new THREE.Mesh(garGeo, new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.8 }));
+    garMesh.position.set(garCenterX, CR + garH / 2, garFrontZ - garD / 2);
+    garMesh.castShadow = true; scene.add(garMesh);
+
+    const garOpenGeo = new THREE.PlaneGeometry(garW - 0.8, garH - 0.4);
+    const garOpen = new THREE.Mesh(garOpenGeo, new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.95 }));
+    garOpen.position.set(garCenterX, CR + garH / 2 - 0.15, garFrontZ + 0.01); scene.add(garOpen);
+
+    function addSUV(cx, cz, color) {
+      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.25, metalness: 0.5 });
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.95, 4.5), mat);
+      body.position.set(cx, CR + 0.55, cz); body.castShadow = true; scene.add(body);
+      const cab = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.68, 2.7), mat);
+      cab.position.set(cx, CR + 1.28, cz + 0.15); cab.castShadow = true; scene.add(cab);
+      const wMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+      const wGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.2, 10);
+      wGeo.rotateZ(Math.PI / 2);
+      [[-0.88, cz - 1.4], [0.88, cz - 1.4], [-0.88, cz + 1.4], [0.88, cz + 1.4]].forEach(([dx, dz]) => {
+        const w = new THREE.Mesh(wGeo, wMat); w.position.set(cx + dx, CR + 0.34, dz); scene.add(w);
+      });
+    }
+
+    const suvZ = garFrontZ - garD / 2 + 1;
+    addSUV(garCenterX - 2.8, suvZ, 0xf0f0f0);
+    addSUV(garCenterX, suvZ, 0x777777);
+    addSUV(garCenterX + 2.8, suvZ, 0x1a1a1a);
+
+    const setbackMat = new THREE.LineDashedMaterial({ color: 0xa67c52, dashSize: 0.5, gapSize: 0.3, transparent: true, opacity: 0.35 });
+    function addSetbackLine(pts) {
+      const g = new THREE.BufferGeometry().setFromPoints(pts);
+      const l = new THREE.Line(g, setbackMat);
+      l.computeLineDistances(); scene.add(l);
+    }
+    addSetbackLine([new THREE.Vector3(-halfW, 0.1, halfD - recuoFront), new THREE.Vector3(halfW, 0.1, halfD - recuoFront)]);
+    addSetbackLine([new THREE.Vector3(-halfW, 0.1, -halfD + recuoBack), new THREE.Vector3(halfW, 0.1, -halfD + recuoBack)]);
+    addSetbackLine([new THREE.Vector3(-halfW + recuoLat, 0.1, halfD), new THREE.Vector3(-halfW + recuoLat, 0.1, -halfD)]);
+    addSetbackLine([new THREE.Vector3(halfW - recuoLat, 0.1, halfD), new THREE.Vector3(halfW - recuoLat, 0.1, -halfD)]);
+
+    const LAT_DEG = -29.80, LON_DEG = -50.06;
+    const LAT_RAD = LAT_DEG * Math.PI / 180;
+    const LOT_BEARING = 36;
+
+    function getSunPosition(dayOfYear, solarHour) {
+      const declRad = 23.45 * Math.sin((360 / 365 * (284 + dayOfYear)) * Math.PI / 180) * Math.PI / 180;
+      const H = (solarHour - 12) * 15 * Math.PI / 180;
+      const sinAlt = Math.sin(LAT_RAD) * Math.sin(declRad) + Math.cos(LAT_RAD) * Math.cos(declRad) * Math.cos(H);
+      const altitude = Math.asin(Math.max(-1, Math.min(1, sinAlt)));
+      const cosAz = (Math.sin(declRad) - Math.sin(LAT_RAD) * sinAlt) / (Math.cos(LAT_RAD) * Math.cos(altitude) + 0.0001);
+      let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAz)));
+      if (H > 0) azimuth = 2 * Math.PI - azimuth;
+      return { altitude, azimuth, altDeg: altitude * 180 / Math.PI, azDeg: azimuth * 180 / Math.PI };
+    }
+
+    function sunTo3D(azimuth, altitude, dist) {
+      const frontBearing = LOT_BEARING * Math.PI / 180;
+      const relAngle = azimuth - frontBearing;
+      const ca = Math.cos(altitude);
+      return new THREE.Vector3(-dist * ca * Math.sin(relAngle), dist * Math.sin(altitude), dist * ca * Math.cos(relAngle));
+    }
+
+    function getSunriseSunset(day) {
+      const d = 23.45 * Math.sin((360 / 365 * (284 + day)) * Math.PI / 180) * Math.PI / 180;
+      const c = -Math.tan(LAT_RAD) * Math.tan(d);
+      if (c < -1) return { rise: 0, set: 24 };
+      if (c > 1) return { rise: 12, set: 12 };
+      const H0 = Math.acos(c) * 180 / Math.PI / 15;
+      return { rise: 12 - H0, set: 12 + H0 };
+    }
+
+    const sunSphere = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({ color: 0xffdd88 }));
+    scene.add(sunSphere);
+
+    let sunPathLine = null;
+    let currentDay = 96;
+
+    function drawSunPath(day) {
+      if (sunPathLine) scene.remove(sunPathLine);
+      const pts = [], ss = getSunriseSunset(day);
+      for (let h = ss.rise; h <= ss.set; h += 0.15) {
+        const sp = getSunPosition(day, h);
+        if (sp.altDeg < 0) continue;
+        pts.push(sunTo3D(sp.azimuth, sp.altitude, 55));
+      }
+      if (pts.length > 2) {
+        sunPathLine = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(pts),
+          new THREE.LineBasicMaterial({ color: 0xffaa44, transparent: true, opacity: 0.4 })
+        );
+        scene.add(sunPathLine);
+      }
+    }
+
+    function updateSun(hour, day) {
+      const sp = getSunPosition(day, hour);
+      const ss = getSunriseSunset(day);
+      const hh = Math.floor(hour), mm = Math.floor((hour - hh) * 60);
+      document.getElementById('timeDisplay').textContent = `${hh}:${mm.toString().padStart(2, '0')}`;
+      document.getElementById('azVal').textContent = `${sp.azDeg.toFixed(1)}\u00B0`;
+      document.getElementById('altVal').textContent = `${sp.altDeg.toFixed(1)}\u00B0`;
+      const rh = Math.floor(ss.rise), rm = Math.floor((ss.rise - rh) * 60);
+      const sh = Math.floor(ss.set), sm = Math.floor((ss.set - sh) * 60);
+      document.getElementById('sunRise').textContent = `${rh}:${rm.toString().padStart(2, '0')}`;
+      document.getElementById('sunSet').textContent = `${sh}:${sm.toString().padStart(2, '0')}`;
+
+      if (sp.altDeg > -2) {
+        const sunPos = sunTo3D(sp.azimuth, Math.max(sp.altitude, 0.02), 55);
+        sunSphere.position.copy(sunPos);
+        sunSphere.visible = sp.altDeg > 0;
+        dirLight.position.copy(sunTo3D(sp.azimuth, Math.max(sp.altitude, 0.05), 50));
+        const altF = Math.max(0, Math.sin(sp.altitude));
+        dirLight.intensity = altF * 1.5 * (sp.altDeg < 15 ? 1.5 : 1.0);
+        if (sp.altDeg < 10) { dirLight.color.setHex(0xff8030); sunSphere.material.color.setHex(0xff9940); }
+        else if (sp.altDeg < 25) { dirLight.color.setHex(0xffb060); sunSphere.material.color.setHex(0xffcc66); }
+        else { dirLight.color.setHex(0xffeedd); sunSphere.material.color.setHex(0xffeeaa); }
+        if (sp.altDeg < 0) { scene.background.setHex(0x0a0a1a); scene.fog.color.setHex(0x0a0a1a); }
+        else if (sp.altDeg < 8) { scene.background.setHex(0x2a2040); scene.fog.color.setHex(0x2a2040); renderer.toneMappingExposure = 0.8 + altF * 0.5; }
+        else if (sp.altDeg < 20) { scene.background.setHex(0x3a4a6a); scene.fog.color.setHex(0x3a4a6a); renderer.toneMappingExposure = 1.0; }
+        else { scene.background.setHex(0x87CEEB); scene.fog.color.setHex(0x87CEEB); renderer.toneMappingExposure = 1.3; }
+        ambientLight.intensity = 0.2 + altF * 0.5;
+        hemiLight.intensity = 0.15 + altF * 0.35;
+      } else {
+        sunSphere.visible = false; dirLight.intensity = 0;
+        scene.background.setHex(0x0a0a1a); scene.fog.color.setHex(0x0a0a1a);
+        renderer.toneMappingExposure = 0.6;
+        ambientLight.intensity = 0.15; hemiLight.intensity = 0.08;
+      }
+    }
+
+    function addCompassLabel(dir, azDeg) {
+      const pos = sunTo3D(azDeg * Math.PI / 180, 0, 42);
+      pos.y = 2;
+      const cv = document.createElement('canvas'); cv.width = 64; cv.height = 32;
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = dir === 'N' ? '#e74c3c' : '#bbb';
+      ctx.font = `bold ${dir === 'N' ? 26 : 22}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.fillText(dir, 32, 26);
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, opacity: 0.7 }));
+      sp.position.copy(pos); sp.scale.set(4, 2, 1); scene.add(sp);
+    }
+    addCompassLabel('N', 0);
+    addCompassLabel('S', 180);
+    addCompassLabel('L', 90);
+    addCompassLabel('O', 270);
+
+    const lakeLabel = document.createElement('canvas');
+    lakeLabel.width = 256; lakeLabel.height = 48;
+    const llCtx = lakeLabel.getContext('2d');
+    llCtx.fillStyle = '#5a9ac0';
+    llCtx.font = 'bold 20px Arial';
+    llCtx.textAlign = 'center';
+    llCtx.fillText('\u2190 LAGO (216\u00B0 SW)', 128, 32);
+    const llSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(lakeLabel), transparent: true, opacity: 0.6 }));
+    llSprite.position.set(0, 4, -halfD - 3);
+    llSprite.scale.set(16, 3, 1); scene.add(llSprite);
+
+    const roadLabel = document.createElement('canvas');
+    roadLabel.width = 256; roadLabel.height = 48;
+    const rlCtx = roadLabel.getContext('2d');
+    rlCtx.fillStyle = '#999';
+    rlCtx.font = 'bold 18px Arial';
+    rlCtx.textAlign = 'center';
+    rlCtx.fillText('VIA INTERNA (36\u00B0 NE)', 128, 32);
+    const rlSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(roadLabel), transparent: true, opacity: 0.5 }));
+    rlSprite.position.set(0, 4, halfD + 6);
+    rlSprite.scale.set(14, 2.5, 1); scene.add(rlSprite);
+
+    document.getElementById('timeSlider').addEventListener('input', (e) => {
+      updateSun(parseFloat(e.target.value), currentDay);
+    });
+
+    document.querySelectorAll('#solar-panel .solar-dates button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#solar-panel .solar-dates button').forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'rgba(255,255,255,0.05)';
+          b.style.borderColor = 'rgba(255,255,255,0.2)';
+          b.style.color = '#b0a090';
+        });
+        btn.classList.add('active');
+        btn.style.background = 'rgba(212,160,84,0.3)';
+        btn.style.borderColor = '#d4a054';
+        btn.style.color = '#d4a054';
+        currentDay = parseInt(btn.dataset.day);
+        drawSunPath(currentDay);
+        updateSun(parseFloat(document.getElementById('timeSlider').value), currentDay);
+      });
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    drawSunPath(currentDay);
+    updateSun(10, currentDay);
+    animate();
+    </script>
+
+    <!-- PROCEDIMENTOS -->
+    <section class="procedimentos">
+        <div class="container">
+            <p class="section-label">Processo</p>
+            <h2 class="section-title">Etapas para Aprova&ccedil;&atilde;o</h2>
+            <div class="proc-timeline">
+                <div class="proc-step"><h4>1. Unifica&ccedil;&atilde;o dos Lotes</h4><p>Conselho T&eacute;cnico &rarr; Prefeitura de Xangri-l&aacute; &rarr; Cart&oacute;rio de Im&oacute;veis.</p></div>
+                <div class="proc-step"><h4>2. Projeto Arquitet&ocirc;nico + Complementares</h4><p>T&eacute;cnico habilitado (CAU/CREA). Plantas, cortes, fachadas, hidrosanitário, elétrico.</p></div>
+                <div class="proc-step"><h4>3. Envio ao Conselho T&eacute;cnico</h4><p>PDF para seasons.obras@gmail.com. Pagar taxa pr&eacute;via.</p></div>
+                <div class="proc-step"><h4>4. An&aacute;lise (~20 dias &uacute;teis)</h4><p>Parecer do Conselho. Positivo: completar jogos. Negativo: corrigir e reenviar.</p></div>
+                <div class="proc-step"><h4>5. Aprova&ccedil;&atilde;o na Prefeitura</h4><p>Com Declara&ccedil;&atilde;o do Conselho. Obter alvar&aacute; de constru&ccedil;&atilde;o.</p></div>
+                <div class="proc-step"><h4>6. In&iacute;cio das Obras</h4><p>Somente com alvar&aacute; PMX + aprova&ccedil;&atilde;o CT. Fiscaliza&ccedil;&atilde;o pelo Conselho.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p class="footer-marca">Resid&ecirc;ncia Seasons</p>
+        <p>Dois lotes unificados</p>
+        <p style="margin-top: 8px; font-size: 0.7rem;">Condom&iacute;nio Seasons &middot; Xangri-l&aacute;/RS</p>
+    </footer>
+
+</body>
+</html>
